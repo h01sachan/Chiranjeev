@@ -4,6 +4,12 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const app = express();
 dotenv.config();
+
+//import routes
+const individualAuth = require("./Routes/individualAuth");
+const HospitalAuth = require("./Routes/HospitalAuth");
+
+
 const PORT = process.env.PORT || 3000 ;
 
 // Express middleware that allows POSTing data
@@ -19,11 +25,17 @@ app.use((req, res, next) =>{
   next();
 });
 
+
+//call route middleware
+app.use(individualAuth);
+app.use(HospitalAuth);
+
 mongoose
   .connect(process.env.DB_CONNECT, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
+    useFindAndModify: false
   })
   .then(() => {
     app.listen(PORT);
