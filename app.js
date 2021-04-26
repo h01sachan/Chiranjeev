@@ -8,7 +8,9 @@ dotenv.config();
 //import routes
 const individualAuth = require("./Routes/individualAuth");
 const HospitalAuth = require("./Routes/HospitalAuth");
-
+const Donation = require("./Routes/Donation");
+const HospitalReq = require("./Routes/HospitalReq");
+const HospitalSearch = require("./Routes/Hospital");
 
 const PORT = process.env.PORT || 3000 ;
 
@@ -29,7 +31,9 @@ app.use((req, res, next) =>{
 //call route middleware
 app.use(individualAuth);
 app.use(HospitalAuth);
-
+app.use(Donation);
+app.use(HospitalReq);
+app.use(HospitalSearch);
 mongoose
   .connect(process.env.DB_CONNECT, {
     useNewUrlParser: true,

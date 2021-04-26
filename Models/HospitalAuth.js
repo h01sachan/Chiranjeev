@@ -29,7 +29,8 @@ const HospitalSchema = new mongoose.Schema({
     Address :{
         type : String,
         default : "UpdateInfo",
-        require : false
+        require : false,
+        unique: true
     },
     State :{
         type : String,

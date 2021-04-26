@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
-const bedDonantion = new mongoose.Schema({
-    Name:{
+const bedDonation = new mongoose.Schema({
+    DoantorName:{
         type : String,
         require : true,
     },
@@ -18,10 +18,14 @@ const bedDonantion = new mongoose.Schema({
         type : Number,
         require : true,
     },
-    city:{
-        type : Number,
+    City:{
+        type : String,
+        require : true,
+    },
+    State :{
+        type : String,
         require : true,
     }
 });
 
-module.exports = mongoose.model("bedDonantion",bedDonantion);
+module.exports = mongoose.model("BedDonation",bedDonation);

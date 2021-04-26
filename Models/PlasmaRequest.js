@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 const PlasmaRequest = new mongoose.Schema({
-   HospitalName:{
+    HospitalName:{
         type : String,
         require : true,
     },
@@ -13,11 +13,16 @@ const PlasmaRequest = new mongoose.Schema({
         type : String,
         require : true
     },
-    address:{
+    Address:{
         type : String,
         require : true
     },
     BloodGroup:{
+        type : String,
+        require : true
+    },
+    HospitalEmail :
+    {
         type : String,
         require : true
     }

@@ -14,10 +14,19 @@ const bedRequest = new mongoose.Schema({
         require: true,
         unique: true
     },
+    City : {
+        type: String,
+        require: true,
+    },
     NoOfBed: {
         type : Number,
         require : true,
     },
+    HospitalEmail :
+    {
+        type: String,
+        require: true,
+    }
 });
 
 module.exports = mongoose.model("bedRequest",bedRequest);
