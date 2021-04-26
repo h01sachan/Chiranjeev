@@ -1,9 +1,9 @@
 const jwt=require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
-const individual = require('../Models/IndividualAuth');
+const HospitalAuth = require('../Models/HospitalAuth');
 const ACCESS = process.env.SUPERSECRET;
-module.exports=(req,res,next)=>{
+module.exports = (req,res,next)=>{
 
     const {authorization}=req.headers
     console.log(authorization);
@@ -16,25 +16,20 @@ module.exports=(req,res,next)=>{
     console.log(authorization);
 
     jwt.verify(token,ACCESS,(err,payload)=>{
-
         if(err){
             return res.status(401).json(err)
         }
 
-        const {id,email,name}=payload
-        // console.log(id);
-        // console.log(email);
-        User.findOne({
-            where:{
-                id:id
-            }
-        })
-        .then(userdata=>{
-            //console.log(userdata);
-            req.user=userdata;
+        const {_id,Email,HospitalName}=payload;
+        HospitalAuth.findById(_id)
+        .then(result =>{
+            req.HospitalData=result;
             next();
         })
+        .catch(err =>{
+            return res.json(err);
+        });
         
     })
     
-}
+};

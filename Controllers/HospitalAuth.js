@@ -4,9 +4,11 @@ const crypto=require('crypto');
 const nodemailer = require("nodemailer")
 const nodemailersendgrid = require("nodemailer-sendgrid-transport")
 const OtpGenerator = require("otp-generator");
+const JWT = require("jsonwebtoken");
 //import models
 const HospitalAuth =  require("../Models/HospitalAuth");
 const HospitalOtp = require("../Models/HospitalOtp");
+
 //regex
 var emailRegex = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/
 
@@ -75,7 +77,7 @@ exports.extradetails = asyncHandler (async (req,res,next)=>{
     if (!InchargeName || !Address || !State || !City || !Contact || !BedAvailibility || !PlasmaAvailibility || !VaccineAvailibility) {
         return res.status(500).json({ error: "please enter all the fields" });
     }
-    const UpdatedData = await HospitalAuth.findOneAndUpdate(req.params.id, req.body);
+    const UpdatedData = await HospitalAuth.findByIdAndUpdate(req.params.id, req.body);
     await UpdatedData.save();
     return res.status(200).json({Message : "Details Successfully updated", UpdatedData});
 });
@@ -95,8 +97,12 @@ exports.otpverification = asyncHandler (async (req,res,next)=>{
 
     if(Otpdata.Otp == Otp && RegisteredHospital.Isverified == "false")
     {
+        const token=JWT.sign({_id:RegisteredHospital._id},process.env.SUPERSECRET,{expiresIn:'6h'});
+        const {_id,HospitalName,Email}=RegisteredHospital;
         RegisteredHospital.Isverified = "true";
         await RegisteredHospital.save();
+
+        return res.status(200).json({Message : "Otp Successfully Verified" , TOken : token,RegisteredHospital});
     }
     else if(Otpdata.Otp != Otp)
     {
@@ -139,4 +145,27 @@ exports.resendotp = asyncHandler ( async (req,res,next)=>{
         subject: "signup successful",
         html: `<h1>welcome to Chrianjeev to enjoy our feature please verify your email using this otp : ${otp}</h1>`
     });
+});
+
+exports.HospitalLogin = asyncHandler ( async (req,res,next)=>{
+    const{Email , Password}=req.body;
+
+    if(!Email || !Password) 
+    {
+        res.status(500).json({error : "please fill all the fields "});
+    }
+
+    const RegisteredHospital = await HospitalAuth.findOne({Email : Email});
+    if(!RegisteredHospital)
+    {
+        res.status(500).json({error : "No hospital is registered with this email id"});
+    }
+    const Passwordmatch = await bcrypt.compare(Password,RegisteredHospitalsavedUser.Password);
+
+    if(!Passwordmatch)
+    {
+        res.status(500).json({error : "Password entered is incorrect"});
+    }
+    const token=JWT.sign({_id:RegisteredHospital._id},process.env.SUPERSECRET,{expiresIn:'6h'});
+    const {_id,HospitalName,Email}=RegisteredHospital;
 });
