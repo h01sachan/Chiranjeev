@@ -13,4 +13,4 @@ const OtpSchema = new mongoose.Schema({
 });
 // OtpSchema.index({ createdAt: 1 }, { expireAfterSeconds:180 });
 
-module.exports = mongoose.model("HospiatlOtp", OtpSchema);
+module.exports = mongoose.model("ChangePasswordOtp", OtpSchema);

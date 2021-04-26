@@ -8,7 +8,7 @@ const JWT = require("jsonwebtoken");
 //import models
 const HospitalAuth =  require("../Models/HospitalAuth");
 const HospitalOtp = require("../Models/HospitalOtp");
-
+const ChangePasswordOtp = require("../Models/HospitalPassword");
 //regex
 var emailRegex = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/
 
@@ -85,7 +85,7 @@ exports.extradetails = asyncHandler (async (req,res,next)=>{
 exports.otpverification = asyncHandler (async (req,res,next)=>{
     const {Otp,Email} = req.body;
     const Otpdata = await HospitalOtp.findOne({Email : Email});  
-    const RegisteredHospital = await HospitalAuth.findOneAndUpdate({Email:Email});
+    const RegisteredHospital = await HospitalAuth.findOne({Email:Email});
     if(!RegisteredHospital)
     {
         return res.status(500).json({Error : "No hospital is registered with this email id"});
@@ -98,7 +98,7 @@ exports.otpverification = asyncHandler (async (req,res,next)=>{
     if(Otpdata.Otp == Otp && RegisteredHospital.Isverified == "false")
     {
         const token=JWT.sign({_id:RegisteredHospital._id},process.env.SUPERSECRET,{expiresIn:'6h'});
-        const {_id,HospitalName,Email}=RegisteredHospital;
+        //const {_id,HospitalName,Email}=RegisteredHospital;
         RegisteredHospital.Isverified = "true";
         await RegisteredHospital.save();
 
@@ -117,12 +117,12 @@ exports.otpverification = asyncHandler (async (req,res,next)=>{
 
 exports.resendotp = asyncHandler ( async (req,res,next)=>{
     const Email = req.body.Email
-    const checkHospital = await IndividualAuth.findOne({Email : Email});
-    if(!checkUser)
+    const checkHospital = await HospitalAuth.findOne({Email : Email});
+    if(!checkHospital)
     {
         return res.status(500).json({error : "Hospital is not registered with this id"});
     }
-    const DeletePreOtp = await HospitalAuth.deleteOne({ Email: Email });
+    const DeletePreOtp = await HospitalOtp.deleteOne({ Email: Email });
 
     let otp = OtpGenerator.generate(4, {
         alphabets: false,
@@ -160,12 +160,80 @@ exports.HospitalLogin = asyncHandler ( async (req,res,next)=>{
     {
         res.status(500).json({error : "No hospital is registered with this email id"});
     }
-    const Passwordmatch = await bcrypt.compare(Password,RegisteredHospitalsavedUser.Password);
+    const Passwordmatch = await bcrypt.compare(Password,RegisteredHospital.Password);
 
     if(!Passwordmatch)
     {
         res.status(500).json({error : "Password entered is incorrect"});
     }
     const token=JWT.sign({_id:RegisteredHospital._id},process.env.SUPERSECRET,{expiresIn:'6h'});
-    const {_id,HospitalName,Email}=RegisteredHospital;
+    console.log(token)
+    return res.status(200).json({msg:"logged in successfully",token:token,HospitalDetails:RegisteredHospital});
+});
+
+exports.ChangePasswordReq = asyncHandler ( async (req,res,next)=>{
+    const {Email} = req.body;
+    const FindHospital = await HospitalAuth.findOne({Email : Email});
+    if(!FindHospital)
+    {
+       return res.status(500).json({Error : "No hospital is registered with this email id"});
+    }
+    const DeletePreOtp = await ChangePasswordOtp.deleteOne({ Email: Email });
+
+    let otp = OtpGenerator.generate(4, {
+        alphabets: false,
+        specialChars: false,
+        upperCase: false,
+    })
+    const optdata = await new ChangePasswordOtp({
+        Email : Email,
+        Otp : otp
+    });
+    console.log(otp);
+
+    await optdata.save();
+
+    res.status(200).json({Message : "hospital Successfully Registred , check your Email for Otp"});
+
+    return transporter.sendMail({
+        from: "sachan.himanshu2001@gmail.com",
+        to: Email,
+        subject: "signup successful",
+        html: `<h1>welcome to Chrianjeev to enjoy our feature please verify your email using this otp : ${otp}</h1>`
+    });
+
+});
+
+exports.ChangePassword = asyncHandler ( async (req,res,next)=>{
+    const {Email,Otp,NewPassword,ConfirmNewPassword} = req.body;
+    const RegisteredHospital = await HospitalAuth.findOne({Email:Email});
+    if(!RegisteredHospital)
+    {
+        return res.status(500).json({Error : "No hospital is registered with this email id"});
+    }
+    const Otpdata = await ChangePasswordOtp.findOne({Email : Email});  
+    if(!Otpdata)
+    {
+        return res.status(500).json({Error : "Otp is Expired"});
+    }
+
+    if(Otpdata.Otp == Otp && (NewPassword == ConfirmNewPassword))
+    {
+        const token=JWT.sign({_id:RegisteredHospital._id},process.env.SUPERSECRET,{expiresIn:'6h'});
+       // const {_id,HospitalName,Email}=RegisteredHospital;
+       const hashedpassword = await bcrypt.hash(NewPassword,12);
+       RegisteredHospital.Password = hashedpassword;
+       RegisteredHospital.Isverified = "true";
+       await RegisteredHospital.save();
+
+        return res.status(200).json({Message : "Password Successfully Changed" , TOken : token,RegisteredHospital});
+    }
+    else if(Otpdata.Otp != Otp)
+    {
+        return res.status(500).json({Error : "Wrong Otp"});
+    }
+    else
+    {
+        return res.status(500).json({Error : "Password Do not matched"});
+    }
 });
