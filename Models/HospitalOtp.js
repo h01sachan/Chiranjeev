@@ -9,7 +9,7 @@ const OtpSchema = new mongoose.Schema({
         type: String,
         require: true,
     },
-    createdAt: { type: Date, expires: "1m", default: Date.now },
+    createdAt: { type: Date, expires: "10m", default: Date.now },
 });
 // OtpSchema.index({ createdAt: 1 }, { expireAfterSeconds:180 });
 

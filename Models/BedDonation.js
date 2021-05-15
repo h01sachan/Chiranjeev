@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 const bedDonation = new mongoose.Schema({
-    DoantorName:{
+    DonorName:{
         type : String,
         require : true,
     },
@@ -9,13 +9,8 @@ const bedDonation = new mongoose.Schema({
         type : String,
         require : true
     },
-    Address: {
-        type: String,
-        require: true,
-        unique: true
-    },
     NoOfBed: {
-        type : Number,
+        type : String,
         require : true,
     },
     City:{

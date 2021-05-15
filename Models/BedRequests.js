@@ -1,31 +1,13 @@
 var mongoose = require("mongoose");
 
 const bedRequest = new mongoose.Schema({
-    HospitalName:{
+    HospitalDetails : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "HospitalAuth",
+    },
+    NumberOfBed :{
         type : String,
-        require : true,
-    },
-    Number:{
-        type : String,
-        require : true
-    },
-    Address: {
-        type: String,
-        require: true,
-        unique: true
-    },
-    City : {
-        type: String,
-        require: true,
-    },
-    NoOfBed: {
-        type : Number,
-        require : true,
-    },
-    HospitalEmail :
-    {
-        type: String,
-        require: true,
+        require : false
     }
 });
 

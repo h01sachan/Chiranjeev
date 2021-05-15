@@ -7,8 +7,7 @@ const HospitalSchema = new mongoose.Schema({
     },
     Email : {
         type: String,
-        require: true,
-        unique: true
+        require: true
     },
     Password : {
         type : String,
@@ -30,7 +29,6 @@ const HospitalSchema = new mongoose.Schema({
         type : String,
         default : "UpdateInfo",
         require : false,
-        unique: true
     },
     State :{
         type : String,
@@ -49,19 +47,31 @@ const HospitalSchema = new mongoose.Schema({
         max: 10,
         min: 10,
     },
-    BedAvailibility :
+    Bedavailability :
     {
         type : String,
         default : "UpdateInfo",
         require : false
     },
-    PlasmaAvailibility :
+    Plasmaavailability :
     {
         type : String,
         default : "UpdateInfo",
         require : false
     },
-    VaccineAvailibility :
+    Vaccineavailability :
+    {
+        type : String,
+        default : "UpdateInfo",
+        require : false
+    },
+    Oxygenavailability :
+    {
+        type : String,
+        default : "UpdateInfo",
+        require : false
+    },
+    Remdesiviravailability : 
     {
         type : String,
         default : "UpdateInfo",

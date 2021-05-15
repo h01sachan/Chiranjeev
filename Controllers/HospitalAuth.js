@@ -70,20 +70,9 @@ exports.registration = asyncHandler( async (req,res,next) =>{
     return res.status(500).json("already exist");
 });
 
-exports.extradetails = asyncHandler (async (req,res,next)=>{
-
-    const {InchargeName,Address,State,City,Contact,BedAvailibility,PlasmaAvailibility,VaccineAvailibility} = req.body;
-    //check everything is filled
-    if (!InchargeName || !Address || !State || !City || !Contact || !BedAvailibility || !PlasmaAvailibility || !VaccineAvailibility) {
-        return res.status(500).json({ error: "please enter all the fields" });
-    }
-    const UpdatedData = await HospitalAuth.findByIdAndUpdate(req.params.id, req.body);
-    await UpdatedData.save();
-    return res.status(200).json({Message : "Details Successfully updated", UpdatedData});
-});
-
 exports.otpverification = asyncHandler (async (req,res,next)=>{
     const {Otp,Email} = req.body;
+    console.log(Otp,Email);
     const Otpdata = await HospitalOtp.findOne({Email : Email});  
     const RegisteredHospital = await HospitalAuth.findOne({Email:Email});
     if(!RegisteredHospital)
@@ -101,7 +90,7 @@ exports.otpverification = asyncHandler (async (req,res,next)=>{
         //const {_id,HospitalName,Email}=RegisteredHospital;
         RegisteredHospital.Isverified = "true";
         await RegisteredHospital.save();
-
+        console.log(RegisteredHospital);
         return res.status(200).json({Message : "Otp Successfully Verified" , TOken : token,RegisteredHospital});
     }
     else if(Otpdata.Otp != Otp)
@@ -113,6 +102,20 @@ exports.otpverification = asyncHandler (async (req,res,next)=>{
         return res.status(200).json({Messgae : "You are already verified"});
     }
     
+});
+exports.extradetails = asyncHandler (async (req,res,next)=>{
+
+    const {InchargeName,Address,State,City,Contact,Bedavailability,Plasmaavailability,Vaccineavailability,Oxygenavailability,Remdesiviravailability} = req.body;
+    console.log(req.body);
+    console.log(req.params.id);
+    //check everything is filled
+    if (!InchargeName || !Address || !State || !City || !Contact || !Bedavailability || !Plasmaavailability || !Vaccineavailability || !Oxygenavailability || !Remdesiviravailability) {
+        return res.status(500).json({ error: "please enter all the fields" });
+    }
+    const UpdatedData = await HospitalAuth.findByIdAndUpdate(req.params.id, req.body);
+    const data = await UpdatedData.save();
+    console.log(data);
+    return res.status(200).json({Message : "Details Successfully updated", data});
 });
 
 exports.resendotp = asyncHandler ( async (req,res,next)=>{
@@ -152,23 +155,23 @@ exports.HospitalLogin = asyncHandler ( async (req,res,next)=>{
 
     if(!Email || !Password) 
     {
-        res.status(500).json({error : "please fill all the fields "});
+        res.status(500).json({Error : "please fill all the fields "});
     }
 
     const RegisteredHospital = await HospitalAuth.findOne({Email : Email});
     if(!RegisteredHospital)
     {
-        res.status(500).json({error : "No hospital is registered with this email id"});
+        res.status(500).json({Error : "No hospital is registered with this email id"});
     }
     const Passwordmatch = await bcrypt.compare(Password,RegisteredHospital.Password);
 
     if(!Passwordmatch)
     {
-        res.status(500).json({error : "Password entered is incorrect"});
+        res.status(500).json({Error : "Password entered is incorrect"});
     }
-    const token=JWT.sign({_id:RegisteredHospital._id},process.env.SUPERSECRET,{expiresIn:'6h'});
+    const token=await JWT.sign({_id:RegisteredHospital._id},process.env.SUPERSECRET,{expiresIn:'6h'});
     console.log(token)
-    return res.status(200).json({msg:"logged in successfully",token:token,HospitalDetails:RegisteredHospital});
+    return res.status(200).json({message:"logged in successfully",token:token,HospitalDetails:RegisteredHospital});
 });
 
 exports.ChangePasswordReq = asyncHandler ( async (req,res,next)=>{
@@ -205,19 +208,14 @@ exports.ChangePasswordReq = asyncHandler ( async (req,res,next)=>{
 });
 
 exports.ChangePassword = asyncHandler ( async (req,res,next)=>{
-    const {Email,Otp,NewPassword,ConfirmNewPassword} = req.body;
+    const {Email,NewPassword,ConfirmNewPassword} = req.body;
     const RegisteredHospital = await HospitalAuth.findOne({Email:Email});
     if(!RegisteredHospital)
     {
         return res.status(500).json({Error : "No hospital is registered with this email id"});
     }
-    const Otpdata = await ChangePasswordOtp.findOne({Email : Email});  
-    if(!Otpdata)
-    {
-        return res.status(500).json({Error : "Otp is Expired"});
-    }
 
-    if(Otpdata.Otp == Otp && (NewPassword == ConfirmNewPassword))
+    if((NewPassword == ConfirmNewPassword))
     {
         const token=JWT.sign({_id:RegisteredHospital._id},process.env.SUPERSECRET,{expiresIn:'6h'});
        // const {_id,HospitalName,Email}=RegisteredHospital;
@@ -228,12 +226,10 @@ exports.ChangePassword = asyncHandler ( async (req,res,next)=>{
 
         return res.status(200).json({Message : "Password Successfully Changed" , TOken : token,RegisteredHospital});
     }
-    else if(Otpdata.Otp != Otp)
-    {
-        return res.status(500).json({Error : "Wrong Otp"});
-    }
-    else
-    {
-        return res.status(500).json({Error : "Password Do not matched"});
-    }
+    return res.status(500).json({Error : "Password Do not matched"});
+});
+
+exports.getDetails  = asyncHandler (async (req,res,next)=>{
+    const HospitalData = await HospitalAuth.findById(req.params.id);
+    res.status(200).json(HospitalData);
 });

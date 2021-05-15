@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 const PlasmaDonation = new mongoose.Schema({
-    DonatorName:{
+    DonorName:{
         type : String,
         require : true,
     },
@@ -10,9 +10,8 @@ const PlasmaDonation = new mongoose.Schema({
         require : true
     },
     Age: {
-        type: Number,
+        type: String,
         require: true,
-        unique: true
     },
     Gender: {
         type : String,
@@ -30,7 +29,11 @@ const PlasmaDonation = new mongoose.Schema({
     State:{
         type : String,
         require : true
-    }
+    },
+    Date:{
+        type : String,
+        require : true
+    } 
 });
 
 module.exports = mongoose.model("PlasmaDonation",PlasmaDonation);

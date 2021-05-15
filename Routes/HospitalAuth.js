@@ -17,4 +17,5 @@ router.patch("/Hospital/Details/:id",HospitalAuthController.extradetails);
 router.post("/Hospital/VerifyOtp",HospitalAuthController.otpverification);
 router.post("/Hospital/ResendOtp",HospitalAuthController.resendotp);
 router.post("/Hospital/Login",HospitalAuthController.HospitalLogin);
+router.get("/Hospital/:id",HospitalAuthController.getDetails);
 module.exports = router;

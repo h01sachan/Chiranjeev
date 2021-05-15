@@ -5,36 +5,40 @@ const HospitalList = require("../Models/HospitalAuth");
 exports.AllHospital = AsyncHandler ( async (req,res,next)=>{
     const List = await HospitalList.find({
         $and : [
-            {IsVerified : "true"},
-            {
-                $or : [
-                    {BedAvailibility : "true"},
-                    {PlasmaAvailibility : "true"}
-                ]
-            }
+            {Isverified : "true"},
+            {$or : [
+                {Bedavailability : "Beds available"},
+                {Plasmaavailability : "Plasma available"},
+                {Vaccineavailability : "Vaccines available"},
+                {Oxygenavailability : "Oxygen available"},
+                {Remdesiviravailability : "Remdesivirs available"}
+            ]}
         ]
     })
-    .limit(20)
     .exec();
 
     return res.status(200).json({List : List});
 });
 
 exports.HospitalByCity = AsyncHandler ( async ( req,res,next)=>{
-    const City = req.query.city;
+    const City = req.body.city;
+    console.log(City);
     const List = await HospitalList.find({
         $and : [
-            {IsVerified : "true"},
-            {City : City},
-            {
-                $or : [
-                    {BedAvailibility : "true"},
-                    {PlasmaAvailibility : "true"}
-                ]
-            }
+            {Isverified : "true"},
+            {City : { $regex: City,$options: 'i'}},
+            {$or : [
+                {Bedavailability : "Beds available"},
+                {Plasmaavailability : "Plasma available"},
+                {Vaccineavailability : "Vaccines available"},
+                {Oxygenavailability : "Oxygen available"},
+                {Remdesiviravailability : "Remdesivirs available"}
+            ]}
         ]
     })
     .exec();
 
     res.status(200).json({List : List});
 });
+
+
