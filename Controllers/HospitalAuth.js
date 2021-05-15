@@ -120,12 +120,13 @@ exports.extradetails = asyncHandler (async (req,res,next)=>{
 
 exports.resendotp = asyncHandler ( async (req,res,next)=>{
     const Email = req.body.Email
+    console.log(Email);
     const checkHospital = await HospitalAuth.findOne({Email : Email});
     if(!checkHospital)
     {
         return res.status(500).json({error : "Hospital is not registered with this id"});
     }
-    const DeletePreOtp = await HospitalOtp.deleteOne({ Email: Email });
+    await HospitalOtp.deleteOne({ Email: Email });
 
     let otp = OtpGenerator.generate(4, {
         alphabets: false,
