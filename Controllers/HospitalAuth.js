@@ -67,7 +67,7 @@ exports.registration = asyncHandler( async (req,res,next) =>{
         });
     }
 
-    return res.status(500).json("already exist");
+    return res.status(422).json("already exist");
 });
 
 exports.otpverification = asyncHandler (async (req,res,next)=>{

@@ -55,8 +55,7 @@ exports.RequestPlasma = AsyncHandler ( async (req,res,next)=>{
 exports.DisplayDonorList = AsyncHandler ( async (req,res,next) =>{
     const BedList = await AvailableBedDonationList.find({
         $and : [
-            {City : req.body.City},
-            {State : req.body.State}
+            {Isverified : "true"}
         ]
     }).exec();
     const PlasmaList = await AvailablePlasmaDonationList.find({
