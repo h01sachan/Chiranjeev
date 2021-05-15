@@ -2,9 +2,6 @@
 const express = require("express");
 const router = express.Router();
 
-//helper function
-const checkemail=require('../helpers/checkemail');
-
 //middleware for protected routes
 const isAuth=require('../Middleware/isAuth');
 

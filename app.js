@@ -6,7 +6,6 @@ const app = express();
 dotenv.config();
 
 //import routes
-const individualAuth = require("./Routes/individualAuth");
 const HospitalAuth = require("./Routes/HospitalAuth");
 const Donation = require("./Routes/Donation");
 const HospitalReq = require("./Routes/HospitalReq");
@@ -29,7 +28,6 @@ app.use((req, res, next) =>{
 
 
 //call route middleware
-app.use(individualAuth);
 app.use(HospitalAuth);
 app.use(Donation);
 app.use(HospitalReq);
