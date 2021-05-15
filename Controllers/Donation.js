@@ -29,10 +29,16 @@ exports.PlasmaDonation = asyncHandler ( async ( req,res,next)=>{
     return res.status(200).json({DonorDetails  : DonorDetails})
 });
 
-exports.getHospitalRequests = asyncHandler ( async ( req,res,next)=>{
-    const PlasmaRequests = await PlasmaReqByHospital.find().populate("HospitalDetails","HospitalName Contact State City Address InchargeName").exec();
-    const BedRequests = await BedReqByHospital.find().populate("HospitalDetails","HospitalName Contact State City Address InchargeName").exec();
-    res.status(200).json({PlasmaRequests : PlasmaRequests,BedRequests : BedRequests});
+exports.getHospitalBedRequests = asyncHandler ( async ( req,res,next)=>{
+
+    const BedReq = await BedReqByHospital.find().populate("HospitalDetails","HospitalName Contact State City Address InchargeName").exec();
+    res.status(200).json({BedReq: BedReq});
+    //const BedRequests = await BedReqByHospital.find();
+
+});
+exports.getHospitalPlasmaRequests = asyncHandler ( async ( req,res,next)=>{
+    const PlasmaReq = await PlasmaReqByHospital.find().populate("HospitalDetails","HospitalName Contact State City Address InchargeName").exec();
+    res.status(200).json({PlasmaReq : PlasmaReq});
     //const BedRequests = await BedReqByHospital.find();
 
 });
@@ -47,4 +53,17 @@ exports.PlasmaDonorList = asyncHandler ( async (req,res,next)=>{
     console.log(DonorList);
     res.status(200).json({DonorList:DonorList});
 });
+
+// exports.SearchInBedRequests = asyncHandler (async(req,res,next)=>{
+//     const BedReq = await BedReqByHospital.find({
+//         City : { $regex: req.body.City,$options: 'i'}
+//     }).exec();
+//     return res.status(200).json({BedReq : BedReq});
+// });
+// exports.SearchInPlasmaRequests = asyncHandler (async(req,res,next)=>{
+//     const PlasmaReq = await PlasmaReqByHospital.find({
+//         City : { $regex: req.body.City,$options: 'i'}
+//     }).exec();
+//     return res.status(200).json({PlasmaReq : PlasmaReq});
+// });
 
