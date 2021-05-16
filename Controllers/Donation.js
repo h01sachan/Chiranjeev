@@ -78,34 +78,41 @@ exports.SearchInBedRequests = asyncHandler(async (req, res, next) => {
       "HospitalName Contact State City Address InchargeName"
     )
     .exec();
-    const BedArray = [];
-    console.log(req.body.City);
-    BedReq.forEach((element)=>{
-        var cmp = (element.HospitalDetails.City).toString();
-        cmp = cmp.toLowerCase();
-        if(cmp.match((req.body.City.toLowerCase()))){
-            BedArray.push(element);
-        }
+  const BedArray = [];
+  console.log(req.body.City);
+  if (req.body.City.length() > 0) {
+    BedReq.forEach((element) => {
+      var cmp = (element.HospitalDetails.City).toString();
+      cmp = cmp.toLowerCase();
+      if (cmp.match((req.body.City.toLowerCase()))) {
+        BedArray.push(element);
+      }
     });
-    
+  }
+  else {
+    BedReq.forEach((element) => {
+      BedArray.push(element);
+    });
+
+  }
   return res.status(200).json({ BedReq: BedArray });
 });
 
-exports.SearchInPlasmaRequests = asyncHandler (async(req,res,next)=>{
-    const PlasmaReq = await PlasmaReqByHospital.find().populate(
-        "HospitalDetails",
-        "HospitalName Contact State City Address InchargeName"
-      ).exec();
+exports.SearchInPlasmaRequests = asyncHandler(async (req, res, next) => {
+  const PlasmaReq = await PlasmaReqByHospital.find().populate(
+    "HospitalDetails",
+    "HospitalName Contact State City Address InchargeName"
+  ).exec();
 
-      const PlasmaArray = [];
-      PlasmaReq.forEach((element)=>{
-        var cmp = (element.HospitalDetails.City).toString();
-        cmp = cmp.toLowerCase();
-        if(cmp.match((req.body.City.toLowerCase()))){
-            PlasmaArray.push(element);
-          }
-      });
-    return res.status(200).json({PlasmaReq : PlasmaArray});
+  const PlasmaArray = [];
+  PlasmaReq.forEach((element) => {
+    var cmp = (element.HospitalDetails.City).toString();
+    cmp = cmp.toLowerCase();
+    if (cmp.match((req.body.City.toLowerCase()))) {
+      PlasmaArray.push(element);
+    }
+  });
+  return res.status(200).json({ PlasmaReq: PlasmaArray });
 });
 
 
