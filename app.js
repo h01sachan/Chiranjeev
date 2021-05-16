@@ -13,10 +13,8 @@ const HospitalSearch = require("./Routes/Hospital");
 
 const PORT = process.env.PORT || 3000 ;
 
-// Express middleware that allows POSTing data
+// Express middleware that allows Parsing data
 app.use(express.json());
-app.use(bodyParser.json({limit: '50mb', extended: true}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 //To remove CROS (cross-resource-origin-platform) problem
 app.use((req, res, next) =>{   

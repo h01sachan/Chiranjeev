@@ -9,7 +9,7 @@ router.get("/HospitalBedRequests",Donation.getHospitalBedRequests);
 router.get("/HospitalPlasmaRequests",Donation.getHospitalPlasmaRequests);
 router.get("/BedDonorRequests" , Donation.BedDonorList);
 router.get("/PlasmaDonorRequests",Donation.PlasmaDonorList);
-// router.post("/BedReq/City",Donation.SearchInBedRequests);
-// router.post("/PlasmaReq/City",Donation.SearchInPlasmaRequests);
+router.post("/BedReq/City",Donation.SearchInBedRequests);
+router.post("/PlasmaReq/City",Donation.SearchInPlasmaRequests);
 
 module.exports = router;
