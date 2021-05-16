@@ -79,7 +79,7 @@ exports.SearchInBedRequests = asyncHandler(async (req, res, next) => {
     )
     .exec();
     const BedArray = [];
-   
+    console.log(req.body.City);
     BedReq.forEach((element)=>{
         var cmp = (element.HospitalDetails.City).toString();
         cmp = cmp.toLowerCase();
@@ -98,7 +98,6 @@ exports.SearchInPlasmaRequests = asyncHandler (async(req,res,next)=>{
       ).exec();
 
       const PlasmaArray = [];
-   
       PlasmaReq.forEach((element)=>{
         var cmp = (element.HospitalDetails.City).toString();
         cmp = cmp.toLowerCase();
