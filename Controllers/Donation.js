@@ -81,7 +81,9 @@ exports.SearchInBedRequests = asyncHandler(async (req, res, next) => {
     const BedArray = [];
    
     BedReq.forEach((element)=>{
-        if(element.HospitalDetails.City.match(req.body.City) ){
+        var cmp = (element.HospitalDetails.City).toString();
+        cmp = cmp.toLowerCase();
+        if(cmp.match((req.body.City.toLowerCase()))){
             BedArray.push(element);
         }
     });
@@ -98,7 +100,9 @@ exports.SearchInPlasmaRequests = asyncHandler (async(req,res,next)=>{
       const PlasmaArray = [];
    
       PlasmaReq.forEach((element)=>{
-          if(element.HospitalDetails.City.match(req.body.City) ){
+        var cmp = (element.HospitalDetails.City).toString();
+        cmp = cmp.toLowerCase();
+        if(cmp.match((req.body.City.toLowerCase()))){
             PlasmaArray.push(element);
           }
       });
