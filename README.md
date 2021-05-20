@@ -1,4 +1,6 @@
 # Project : Chiranjeev
+# Frontend Repo : 
+https://github.com/UjjwalSingh1908/chiranjeev
 # Inspiration : 
 When we all thought the pandemic was over, we were hit by it with a greater force. Each day the number of cases is increasing and with an increase in the number of people getting infected, it’s getting very hard to find hospitals with beds, ventilators, and the number of vaccines available in hospitals. <br>
 Also, there is a huge need for plasma donation in every hospital, and thus an urgent need to make people aware of the process.
@@ -9,7 +11,6 @@ On the other hand, Hospitals can register themselves in the app and request plas
 # How we built it
 The frontend was implemented in react.js, using Figma for design and layout, and Axios to consume the backend.<br>
 The backend was developed in node.js and express.js. Using some middlewares like jwt, to generate tokens, cors to enable the external ports for the frontend. And we keep the information in a NoSQL database, MongoDB.
-# Frontend Repo : https://github.com/UjjwalSingh1908/chiranjeev
 # Screenshots of the project:
 ## Landing Page
 ![screencapture-localhost-3000-2021-05-16-18_11_20](https://user-images.githubusercontent.com/56830512/118397719-0ff2d980-b673-11eb-90bc-75c0d6143c5f.png)
