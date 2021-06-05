@@ -164,6 +164,7 @@ exports.HospitalLogin = asyncHandler ( async (req,res,next)=>{
     {
         res.status(500).json({Error : "No hospital is registered with this email id"});
     }
+    else if(RegisteredHospital.Isverified == "false") res.status(500).json({Error : "email not verified"});
     const Passwordmatch = await bcrypt.compare(Password,RegisteredHospital.Password);
 
     if(!Passwordmatch)
